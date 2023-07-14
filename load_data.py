@@ -7,7 +7,7 @@ logger = logging.Logger(__name__)
 
 
 class DataAggregator:
-    BASEPATH = "/Users/arthun/code/data/KI test"
+    BASEPATH = "/Users/arthun/Google Drive/AI 2D-IR/KI test"
 
     RAW_DATA = "raw_data"
 
