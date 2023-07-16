@@ -18,6 +18,7 @@ class ExperimentConfig:
 
     def get_names(self):
         self.config_zip_name = f"hwconfigxxx_{self.experiment}.zip"
+        self.raw_data_folder_name = "raw_data"
 
         if self.laboratory == "i-lab":
             self.analog_input_config_name = "I-Lab" + self.ANALOG_INPUT_CONFIG_POSTFIX

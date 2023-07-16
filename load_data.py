@@ -8,18 +8,27 @@ logger = logging.Logger(__name__)
 
 
 class DataAggregator:
-    BASEPATH = config.BASEPATH
-    RAW_DATA = config.RAW_DATA
+    BASEPATH = "/Users/arthun/Google Drive/AI 2D-IR/KI test"
 
-    def __init__(self, experiment: str = "20230213_KI_test_30_000"):
+    def __init__(
+        self, experiment: str = "20230213_KI_test_30_000", laboratory: str = "i-lab"
+    ):
         self.experiment = experiment
         self.path = os.path.join(self.BASEPATH, experiment)
+        self.laboratory = (
+            laboratory  # this should be automatically parsed from data set
+        )
+
+        self.config = config.ExperimentConfig(
+            self.BASEPATH, experiment, laboratory="i-lab"
+        )
+
         self.preallocate()
         self.load()
         self.save()
 
     def preallocate(self):
-        p = os.path.join(self.path, self.RAW_DATA)
+        p = os.path.join(self.path, self.config.raw_data_folder_name)
         delays = os.listdir(p)
         self.ndelays = len(delays)
 
@@ -36,7 +45,7 @@ class DataAggregator:
         self.data = np.zeros(shape)
 
     def load(self):
-        p = os.path.join(self.path, self.RAW_DATA)
+        p = os.path.join(self.path, self.config.raw_data_folder_name)
 
         for didx, delay in enumerate(os.listdir(p)):
             path = os.path.join(p, delay)
@@ -61,7 +70,17 @@ class DataAggregator:
         np.save(path, self.data)
 
 
+import unittest
+
+
+class TestDataAggregator(unittest.TestCase):
+    def test_init(self):
+        da = DataAggregator()
+
+
 if __name__ == "__main__":
+    unittest.main()
+
     experiments = os.listdir(DataAggregator.BASEPATH)
     for experiment in experiments:
         if os.path.isdir(os.path.join(DataAggregator.BASEPATH, experiment)):
