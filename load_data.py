@@ -1,3 +1,4 @@
+import config
 import numpy as np
 import os
 
@@ -7,12 +8,8 @@ logger = logging.Logger(__name__)
 
 
 class DataAggregator:
-    BASEPATH = "/Users/arthun/code/data/KI test"
-
-    RAW_DATA = "raw_data"
-
-    PIXELS = 32
-    ROWS = 2
+    BASEPATH = config.BASEPATH
+    RAW_DATA = config.RAW_DATA
 
     def __init__(self, experiment: str = "20230213_KI_test_30_000"):
         self.experiment = experiment
@@ -46,20 +43,23 @@ class DataAggregator:
             if not os.path.isdir(path):
                 logger.debug(f"Skipping delay/folder or file {delay}.")
                 continue
-            
+
             for sidx, scan in enumerate(os.listdir(path)):
                 path = os.path.join(p, delay, scan)
                 if path[:-3] != "npy":
                     logger.debug(f"Skipping array/folder or file {scan}.")
                     continue
-                
+
                 logger.debug(f"Loading {path}, into {didx=}, {sidx=}.")
-                self.data[didx, sidx] = next(iter(np.load(os.path.join(p, delay, scan)).values()))
+                self.data[didx, sidx] = next(
+                    iter(np.load(os.path.join(p, delay, scan)).values())
+                )
 
     def save(self):
         path = os.path.join(self.BASEPATH, self.experiment)
         logger.info(f"Saving loaded data to {path}.")
         np.save(path, self.data)
+
 
 if __name__ == "__main__":
     experiments = os.listdir(DataAggregator.BASEPATH)
